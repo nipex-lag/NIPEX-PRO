@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIPEX — Access Pass</title>
+<style>
+  :root {
+    --bg: #000000;
+    --text: #fafafa;
+    --text-2: #8a8a8a;
+    --text-3: #4a4a4a;
+    --hairline: rgba(255, 255, 255, 0.07);
+    --hairline-2: rgba(255, 255, 255, 0.04);
+    --accent: #00ff88;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'ss01', 'cv01';
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Single barely-there glow — that's it */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -220px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 620px;
+    height: 420px;
+    background: radial-gradient(ellipse, rgba(0, 255, 136, 0.035), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    animation: fade 1s cubic-bezier(.2,.7,.2,1);
+  }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- HEADER ---------- */
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .brand img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--hairline);
+  }
+
+  .brand span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--text);
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+
+  .status .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 52px 0 44px;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    margin-bottom: 22px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--text-3);
+  }
+
+  h1 {
+    font-size: 42px;
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    margin-bottom: 22px;
+  }
+
+  h1 .serif {
+    display: block;
+    font-family: 'Times New Roman', 'Georgia', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #8a8a8a;
+    letter-spacing: -0.02em;
+    font-size: 40px;
+    line-height: 1.1;
+  }
+
+  h1 .sans {
+    display: block;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.05em;
+    margin-top: 4px;
+  }
+
+  .lead {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text-2);
+    letter-spacing: -0.003em;
+    max-width: 340px;
+  }
+
+  /* ---------- ACTION ---------- */
+  .action {
+    padding: 34px 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .action-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    margin-bottom: 18px;
+  }
+
+  .action-label .num {
+    color: var(--text-2);
+  }
+
+  .desc {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--text-2);
+    letter-spacing: -0.003em;
+    margin-bottom: 22px;
+  }
+
+  .notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 0;
+    margin-bottom: 22px;
+    border-top: 1px solid var(--hairline-2);
+    border-bottom: 1px solid var(--hairline-2);
+  }
+
+  .notice svg {
+    width: 12px;
+    height: 12px;
+    color: #eec136;
+    flex-shrink: 0;
+    margin-top: 3px;
+    opacity: 0.7;
+  }
+
+  .notice p {
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: #9a8756;
+    letter-spacing: -0.003em;
+  }
+
+  .notice p strong {
+    color: #c9a94d;
+    font-weight: 600;
+  }
+
+  /* ---------- BUTTON ---------- */
+  .btn {
+    position: relative;
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: -0.003em;
+    color: #0a0a0a;
+    cursor: pointer;
+    background: #fafafa;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.4s cubic-bezier(.2,.7,.2,1);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 -1px 0 rgba(0, 0, 0, 0.08) inset;
+  }
+
+  /* signature green underline reveal */
+  .btn::after {
+    content: '';
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition:
+      opacity 0.4s ease,
+      left 0.55s cubic-bezier(.2,.7,.2,1),
+      right 0.55s cubic-bezier(.2,.7,.2,1);
+  }
+
+  .btn:hover:not(.loading) {
+    background: #ffffff;
+    box-shadow:
+      0 0 0 1px rgba(0, 255, 136, 0.35),
+      0 0 30px rgba(0, 255, 136, 0.14),
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 -1px 0 rgba(0, 0, 0, 0.08) inset;
+  }
+
+  .btn:hover:not(.loading)::after {
+    opacity: 1;
+    left: 5%;
+    right: 5%;
+  }
+
+  .btn:active:not(.loading) {
+    transform: scale(0.995);
+  }
+
+  .btn.loading {
+    cursor: wait;
+    opacity: 0.85;
+  }
+
+  .btn .arrow {
+    font-size: 12px;
+    transition: transform 0.4s cubic-bezier(.2,.7,.2,1);
+  }
+
+  .btn:hover:not(.loading) .arrow {
+    transform: translateX(3px);
+  }
+
+  .spinner {
+    display: none;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid rgba(0, 0, 0, 0.2);
+    border-top-color: #0a0a0a;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  .btn.loading .spinner { display: inline-block; }
+  .btn.loading .arrow   { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- FOOTER ---------- */
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 22px;
+    border-top: 1px solid var(--hairline);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+
+  .foot .mid {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .foot .mid::before,
+  .foot .mid::after {
+    content: '';
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--text-3);
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 22px 20px; }
+    h1 { font-size: 36px; }
+    h1 .serif { font-size: 34px; }
+    .hero { padding: 40px 0 36px; }
+    .action { padding: 28px 0; }
+    .foot .mid { display: none; }
+  }
+
+  @media (max-width: 380px) {
+    h1 { font-size: 32px; }
+    h1 .serif { font-size: 30px; }
+    .lead { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="head">
+    <div class="brand">
+      <img src="./assets/logo.png" alt="NIPEX">
+      <span>NIPEX</span>
+    </div>
+    <div class="status">
+      <span class="dot"></span>
+      <span>Live</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="eyebrow">Access Pass</div>
+    <h1>
+      <span class="serif">Get a free</span>
+      <span class="sans">access key.</span>
+    </h1>
+    <p class="lead">Complete verification to receive your personal key. Takes under a minute — no signup, no spam.</p>
+  </section>
+
+  <!-- Action -->
+  <section class="action">
+    <div class="action-label">
+      <span class="num">01</span>
+      <span>Verification</span>
+    </div>
+    <p class="desc">Click below to complete verification. You'll be redirected and returned automatically once it's finished.</p>
+
+    <div class="notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <p><strong>Note:</strong> Bots or automation result in a permanent ban.</p>
+    </div>
+
+    <button class="btn" id="btn">
+      <span class="spinner"></span>
+      <span class="label">Continue</span>
+      <span class="arrow">→</span>
+    </button>
+  </section>
+
+  <!-- Footer -->
+  <footer class="foot">
+    <span>v1.0</span>
+    <span class="mid">Encrypted</span>
+    <span>© 2025</span>
+  </footer>
+
+</div>
+
+<script>
+  const btn = document.getElementById('btn');
+  const label = btn.querySelector('.label');
+
+  btn.addEventListener('click', (e) => {
+    if (btn.classList.contains('loading')) {
+      e.preventDefault();
+      return;
+    }
+    btn.classList.add('loading');
+    label.textContent = 'Redirecting';
+    setTimeout(() => {
+      window.location.href = 'https://vplink.in/NIPEX-GOD';
+    }, 500);
+  });
+</script>
+
+</body>
+</html>
